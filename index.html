@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Speed Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #speed {
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <div id="speed">Getting speed...</div>
+
+    <script>
+        // Check if the Geolocation API is available
+        if ("geolocation" in navigator) {
+            navigator.geolocation.watchPosition(success, error, {
+                enableHighAccuracy: true,
+                maximumAge: 0
+            });
+        } else {
+            document.getElementById('speed').innerText = "Geolocation is not supported by this browser.";
+        }
+
+        function success(position) {
+            // Speed in meters per second
+            var speed = position.coords.speed;
+            if (speed === null) {
+                document.getElementById('speed').innerText = "Speed not available.";
+            } else {
+                // Convert speed to km/h and display it
+                var speedKmh = (speed * 3.6).toFixed(2);
+                document.getElementById('speed').innerText = "Current speed: " + speedKmh + " km/h";
+            }
+        }
+
+        function error(err) {
+            console.warn(`ERROR(${err.code}): ${err.message}`);
+            document.getElementById('speed').innerText = "Unable to retrieve speed.";
+        }
+    </script>
+</body>
+</html>
